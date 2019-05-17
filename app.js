@@ -5,12 +5,7 @@ var cors = require("cors");
 // config for your database
 app.use(cors());
 
-var config = {
-  user: "master",
-  password: "",
-  server: "192.1.1.218",
-  database: "AGQSLAPP"
-};
+
 
 app.get("/Requisiciones/:id", function(req, res) {
   // connect to your database
