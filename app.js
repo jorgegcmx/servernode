@@ -233,6 +233,8 @@ app.get("/Tanques/", function(req, res) {
     );
   });
 });
+
+
 app.get("/Tanques/:almacen", function(req, res) {
   // connect to your database
   sql.connect(config, function(err) {

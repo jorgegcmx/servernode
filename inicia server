@@ -9,9 +9,7 @@ Arrancar y parar procesos
 Lo primero que debes aprender es a arrancar y detener procesos, o volverlos a arracar cuando sea necesario. Obviamente, en vez de solicitar a Node que ejecute tal o cual fichero, se lo pediremos directamente a PM2.
 
 pm2 start index.js
-Con esto podrás arrancar un proceso, asegurando que tu servidor permanezca encendido. Es habitual que quieras asignar un nombre al proceso, de manera que luego te puedas referir a él en otro tipo de comandos.
-
-pm2 start app.js --name "mi-api"
+Con esto podrás arrancar un proceso, asegurando que tu servidor permanezca encendido. Es habitual que quieras asignar un nombre al proceso, de manera que luego te puedas referir a él en otro tipo de comandos
 Nota: Si no asignaste explícitamente al proceso un nombre, al hacer el "pm2 start" con la opción "--name", se le asignará un nombre igualmente, generado a partir del nombre del archivo que se pone en ejecución, sin la extensión ".js".
 Para detener el proceso se usará el comando stop, indicando el nombre del proceso que quieres parar.
 
