@@ -434,7 +434,7 @@ app.get("/Granjas/", function(req, res) {
     );
   });
 });
-app.get("/Casetas/", function(req, res) {
+app.get("/Casetas/:Granja", function(req, res) {
   // connect to your database
   sql.connect(config, function(err) {
     if (err) console.log(err);
@@ -442,7 +442,7 @@ app.get("/Casetas/", function(req, res) {
     var data = [];
     var request = new sql.Request();
     // query to the database and get the data
-    request.query("SELECT NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto FROM ItemSite ITS INNER JOIN Inventory IV on ITS.InvtID=IV.InvtID INNER JOIN nuICCapdeCas G on G.AlmacenCas=ITS.SiteID WHERE  ITS.InvtID IN('PLO0001','PLO0002','PLO0003','PLE0001') AND  ITS.QtyAvail<>0  GROUP BY NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto ORDER BY Granja DESC ",
+    request.query("SELECT NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto FROM ItemSite ITS INNER JOIN Inventory IV on ITS.InvtID=IV.InvtID INNER JOIN nuICCapdeCas G on G.AlmacenCas=ITS.SiteID WHERE Granja='"+req.params.Granja+"' AND ITS.InvtID IN('PLO0001','PLO0002','PLO0003','PLE0001') AND  ITS.QtyAvail<>0  GROUP BY NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto ORDER BY Granja DESC ",
       function(err, recordsets) {
         if (err) {
           console.log(err);
