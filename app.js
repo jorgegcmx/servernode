@@ -457,6 +457,79 @@ app.get("/Casetas/:Granja", function(req, res) {
   });
 });
 
+
+app.get("/ordenes/:Lote", function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    // query to the database and get the data
+    request.query(
+      "select * from PurchOrd ORH (nolock) where ORH.PONbr='" + req.params.Lote + "'",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
+app.get("/ordenespartidas/:Lote", function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    // query to the database and get the data
+    request.query(
+      "select * from purorddet ORD (nolock) where ORD.PONbr='" + req.params.Lote + "'",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
+app.get("/datosrequi/:Idregistropadres", function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    // query to the database and get the data
+    request.query(
+      "exec datosRequi '" + req.params.Idregistropadres + "'",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
 //server node js
 var server = require("http").Server(app);
 var port = process.env.port || 8000;
