@@ -1,7 +1,11 @@
 var express = require("express");
+var pedidos=require("./pedidos/pedidos");
+
+
 var app = express();
 var sql = require("mssql");
 var cors = require("cors");
+
 // config for your database
 app.use(cors());
 
@@ -11,6 +15,12 @@ var config = {
   server: "192.1.1.218",
   database: "AGQSLAPP"
 };
+
+
+
+app.use('/pedidos', pedidos);
+
+
 
 app.get("/Requisiciones/:id", function(req, res) {
   // connect to your database
@@ -529,6 +539,39 @@ app.get("/datosrequi/:Idregistropadres", function(req, res) {
     );
   });
 });
+
+
+
+
+/*app.get("/Pedidos/", function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+
+    var hoy = new Date();
+    dia = (hoy.getDate()-1); 
+    mes = hoy.getMonth();
+    anio= hoy.getFullYear();
+    fecha_actual = String(anio+"-"+mes+"-"+dia);
+    // query to the database and get the data
+    request.query( "Select Status, Count(*) as Cantidad From Batch Where Module = 'IN' And BatNbr In (Select LoteSal from nudcPedPolProHdr Where Status = 'F' And Fecha = '" +fecha_actual+ "') Group by Status",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});*/
+
 
 //server node js
 var server = require("http").Server(app);
