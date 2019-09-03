@@ -540,24 +540,17 @@ app.get("/datosrequi/:Idregistropadres", function(req, res) {
   });
 });
 
+//APIS DE GET PARA EL RASTREO DE PROYECTOS PE
 
-
-
-/*app.get("/Pedidos/", function(req, res) {
+app.get("/CostoPollo/:IdCaseta", function(req, res) {
   // connect to your database
   sql.connect(config, function(err) {
     if (err) console.log(err);
     // create Request object
     var data = [];
     var request = new sql.Request();
-
-    var hoy = new Date();
-    dia = (hoy.getDate()-1); 
-    mes = hoy.getMonth();
-    anio= hoy.getFullYear();
-    fecha_actual = String(anio+"-"+mes+"-"+dia);
     // query to the database and get the data
-    request.query( "Select Status, Count(*) as Cantidad From Batch Where Module = 'IN' And BatNbr In (Select LoteSal from nudcPedPolProHdr Where Status = 'F' And Fecha = '" +fecha_actual+ "') Group by Status",
+    request.query("SELECT NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto FROM ItemSite ITS INNER JOIN Inventory IV on ITS.InvtID=IV.InvtID INNER JOIN nuICCapdeCas G on G.AlmacenCas=ITS.SiteID WHERE NumIDCaseta='"+req.params.IdCaseta+"' AND ITS.InvtID IN('PLO0001','PLO0002','PLO0003','PLE0001') AND  ITS.QtyAvail<>0  GROUP BY NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto ORDER BY Granja DESC ",
       function(err, recordsets) {
         if (err) {
           console.log(err);
@@ -570,7 +563,7 @@ app.get("/datosrequi/:Idregistropadres", function(req, res) {
       }
     );
   });
-});*/
+});
 
 
 //server node js
