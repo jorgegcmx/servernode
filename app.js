@@ -550,7 +550,34 @@ app.get("/CostoPollo/:IdCaseta", function(req, res) {
     var data = [];
     var request = new sql.Request();
     // query to the database and get the data
-    request.query("SELECT NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto FROM ItemSite ITS INNER JOIN Inventory IV on ITS.InvtID=IV.InvtID INNER JOIN nuICCapdeCas G on G.AlmacenCas=ITS.SiteID WHERE NumIDCaseta='"+req.params.IdCaseta+"' AND ITS.InvtID IN('PLO0001','PLO0002','PLO0003','PLE0001') AND  ITS.QtyAvail<>0  GROUP BY NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto ORDER BY Granja DESC ",
+    request.query("SELECT NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto FROM ItemSite ITS INNER JOIN Inventory IV on ITS.InvtID=IV.InvtID INNER JOIN nuICCapdeCas G on G.AlmacenCas=ITS.SiteID WHERE NumIDCaseta='"+req.params.IdCaseta+"' AND ITS.InvtID IN('PLO0001','PLO0002','PLO0003','PLE0001')   GROUP BY NumIDCaseta,Modulo,Caseta,Granja,Nombre,ITS.SiteID,ITS.InvtID,ITS.QtyAvail,ITS.AvgCost,IV.Descr,G.Proyecto ORDER BY Granja DESC ",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
+app.get("/DetalleCarton/:idCaseta/:annio/:ciclo",  async function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    var idcaseta = req.param('idCaseta');
+    var annio = req.param('annio');
+    var ciclo = req.param('ciclo');  
+
+    // query to the database and get the data
+    request.query("SELECT  NumIDCaseta,Ano,Ciclo,Edad,LoteConsAlimGas,B.Crtd_Prog as PanSalida,B.Module as ModSalida,B.crtot as Totalsalida,B.status as StatusSalida,LoteAjusteMerma,B1.Crtd_Prog as PantAjuste,B1.Module as ModAjuste,B1.crtot as TotalAjuste,B1.status as StatusAjuste FROM nupecontcasdet left outer join batch B on B.batnbr=LoteConsAlimGas left outer join batch B1 on B1.batnbr=LoteAjusteMerma  WHERE NumIDCaseta='"+idcaseta+"' and Ano= '"+annio+"' and Ciclo= '"+ciclo+"' and LoteConsAlimGas is not null order by Edad",
       function(err, recordsets) {
         if (err) {
           console.log(err);
