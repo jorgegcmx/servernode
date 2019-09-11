@@ -577,7 +577,7 @@ app.get("/DetalleCarton/:idCaseta/:annio/:ciclo",  async function(req, res) {
     var ciclo = req.param('ciclo');  
 
     // query to the database and get the data
-    request.query("SELECT  NumIDCaseta,Ano,Ciclo,Edad,LoteConsAlimGas,B.Crtd_Prog as PanSalida,B.Module as ModSalida,B.crtot as Totalsalida,B.status as StatusSalida,LoteAjusteMerma,B1.Crtd_Prog as PantAjuste,B1.Module as ModAjuste,B1.crtot as TotalAjuste,B1.status as StatusAjuste FROM nupecontcasdet left outer join batch B on B.batnbr=LoteConsAlimGas left outer join batch B1 on B1.batnbr=LoteAjusteMerma  WHERE NumIDCaseta='"+idcaseta+"' and Ano= '"+annio+"' and Ciclo= '"+ciclo+"' and LoteConsAlimGas is not null order by Edad",
+    request.query("SELECT  NumIDCaseta,Ano,Ciclo,Edad,LoteConsAlimGas,B.Crtd_Prog as PanSalida,B.Module as ModSalida,B.crtot as Totalsalida,B.status as StatusSalida,LoteAjusteMerma,B1.Crtd_Prog as PantAjuste,B1.Module as ModAjuste,B1.crtot as TotalAjuste,B1.status as StatusAjuste FROM nupecontcasdet left outer join batch B on B.batnbr=LoteConsAlimGas left outer join batch B1 on B1.batnbr=LoteAjusteMerma  WHERE NumIDCaseta='"+idcaseta+"' and Ano= '"+annio+"' and Ciclo= '"+ciclo+"' order by Edad",
       function(err, recordsets) {
         if (err) {
           console.log(err);
