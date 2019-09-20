@@ -592,6 +592,30 @@ app.get("/DetalleCarton/:idCaseta/:annio/:ciclo",  async function(req, res) {
   });
 });
 
+app.get("/DetalleSalida/:lote",  async function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    var lote = req.param('lote');
+    // query to the database and get the data
+    request.query("select Crtd_User,ProjectID,InvtID,Qty,UnitPrice,TranAmt,TranDesc,TranType,WhseLoc,User1,COGSSub,InvtSub,InvtAcct,ExtCost,ReasonCd,SiteID,Sub from  INTran where batNbr='"+lote+"' and TranType='II'",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
 
 //server node js
 var server = require("http").Server(app);
