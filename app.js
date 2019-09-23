@@ -617,6 +617,32 @@ app.get("/DetalleSalida/:lote",  async function(req, res) {
 });
 
 
+app.get("/transferencia/:lote/:trantype",  async function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    var lote = req.param('lote');
+    var trantype = req.param('trantype');
+    // query to the database and get the data
+    request.query("select sum(Qty) as Cantidad,SUM(ExtCost) as Subtotal,ProjectID from INTran where BatNbr='"+lote+"' and TranType='"+trantype+"' group by ProjectID",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
+
 //server node js
 var server = require("http").Server(app);
 var port = process.env.port || 8000;
