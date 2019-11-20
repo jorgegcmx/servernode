@@ -1,4 +1,5 @@
 var express = require("express");
+//var config=require("./conexion/conexion");
 var pedidos=require("./pedidos/pedidos");
 
 
@@ -10,8 +11,14 @@ var cors = require("cors");
 app.use(cors());
 
 
+var config = {
+  user: "master",
+  password: "",
+  server: "192.1.1.218",
+  database: "AGQSLAPP"
+};
 
-
+//app.use('/conexion', conexion);
 
 app.use('/pedidos', pedidos);
 
