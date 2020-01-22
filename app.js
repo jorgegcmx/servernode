@@ -446,6 +446,7 @@ app.get("/Granjas/", function(req, res) {
     );
   });
 });
+
 app.get("/Casetas/:Granja", function(req, res) {
   // connect to your database
   sql.connect(config, function(err) {
@@ -630,6 +631,32 @@ app.get("/transferencia/:lote/:trantype",  async function(req, res) {
     var trantype = req.param('trantype');
     // query to the database and get the data
     request.query("select sum(Qty) as Cantidad,SUM(ExtCost) as Subtotal,ProjectID from INTran where BatNbr='"+lote+"' and TranType='"+trantype+"' group by ProjectID",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
+
+app.get("/pedidos/:mes1/:annio", function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    // query to the database and get the data
+    request.query(
+ "select Articulo,I.Descr,sum(PesoPedido)as Peso,sum(TotFactura)as Total, Month(H.Crtd_DateTime) as Fecha,year(H.Crtd_DateTime) as Annio from NudcPedPolProHdr H (nolock) inner join nudcPedPolProDet D (nolock) on D.Pedido=H.Pedido inner join Inventory I on I.InvtID=D.Articulo where H.Status='F' and Month(H.Crtd_DateTime)='" +
+        req.params.mes1 + "' and YEAR(H.Crtd_DateTime)='" +req.params.annio + "' group by Articulo,I.Descr,Month(H.Crtd_DateTime),year(H.Crtd_DateTime) order by Articulo ",
       function(err, recordsets) {
         if (err) {
           console.log(err);
