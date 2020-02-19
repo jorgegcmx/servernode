@@ -15,7 +15,8 @@
     "express": "^4.16.4",
     "init": "^0.1.2",
     "mssql": "^5.0.3",
-    "router-express": "^1.5.2"
+    "router-express": "^1.5.2",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
