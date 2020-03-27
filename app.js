@@ -646,6 +646,7 @@ app.get("/transferencia/:lote/:trantype",  async function(req, res) {
 });
 
 
+
 app.get("/pedidos/:mes1/:annio", function(req, res) {
   // connect to your database
   sql.connect(config, function(err) {
@@ -671,6 +672,30 @@ app.get("/pedidos/:mes1/:annio", function(req, res) {
   });
 });
 
+app.get("/mortalidad/:anio",  async function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    var anio = req.param('anio');
+  
+    // query to the database and get the data
+    request.query("select * from vw_mortalidad where annio='"+anio+"' order by number",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
 
 //server node js
 var server = require("http").Server(app);
