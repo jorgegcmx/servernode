@@ -697,6 +697,77 @@ app.get("/mortalidad/:anio",  async function(req, res) {
   });
 });
 
+app.get("/mortalidad_granjas/:anio",  async function(req, res) {
+  // connect to your database
+  sql.connect(config, function(err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    var anio = req.param('anio');
+  
+    // query to the database and get the data
+    request.query("select * from vw_mortalidad_granja where annio='"+anio+"' order by number",
+      function(err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.writeHead(200, { "Content-type": "application/json" });
+          res.write(JSON.stringify(recordsets.recordset));
+         
+        }
+        res.end();
+        sql.close();
+      }
+    );
+  });
+});
+
+
+app.get("/niveles_json/:anio", function (req, res) {
+  // connect to your database
+  sql.connect(config, function (err) {
+    if (err) console.log(err);
+    // create Request object
+    var data = [];
+    var request = new sql.Request();
+    var anio = req.param('anio');
+
+    // query to the database and get the data
+    request.query("select * from vw_json_mortalidad where annio='" + anio + "'",
+      function (err, recordsets) {
+        if (err) {
+          console.log(err);
+        } else {
+          // res.writeHead(200, { "Content-type": "application/json" });
+          //res.write(JSON.stringify(recordsets.recordset));
+
+          res.json(recordsets.recordset);
+
+        }
+        res.end();
+        sql.close();
+      }
+    ).then(
+      // query to the database and get the data
+      request.query("select * from vw_json_mortalidad where annio='" + anio + "'",
+        function (err, result) {
+          if (err) {
+            console.log(err);
+          } else {
+            // res.writeHead(200, { "Content-type": "application/json" });
+            //res.write(JSON.stringify(recordsets.recordset));
+
+            res.json(result.recordset);
+
+          }
+          res.end();
+          sql.close();
+        }
+      )
+    );
+  });
+});
 //server node js
 var server = require("http").Server(app);
 var port = process.env.port || 8000;
